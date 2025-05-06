@@ -6,22 +6,21 @@ class Database {
   static const String _user = 'root';
   static const String _nombreBBDD = 'pokeapi_app';
 
-
- static instalarBBDD() async {
+  static instalarBBDD() async {
     var settings = ConnectionSettings(
       host: _host, 
       port: _port,
       user: _user,
     );
     var conn = await MySqlConnection.connect(settings);
-    try{
+    try {
       await _crearBBDD(conn);
       await _crearTablaUsuarios(conn);
-      await _crearTablaEquipo(conn);
+      await _crearTablaTipo(conn);
+      await _crearTablaAtaque(conn);
       await _crearTablaPokemon(conn);
       await _crearTablaObjeto(conn);
-      await _crearTablaInventarioUsuario(conn);
-    } catch(e){
+    } catch (e) {
       print(e);
     } finally {
       await conn.close();
@@ -51,22 +50,23 @@ class Database {
       password VARCHAR(100) NOT NULL,
       pokeles INT DEFAULT 0,
       nivel INT DEFAULT 1
-      )''');
+    )''');
   }
 
-  static _crearTablaEquipo(MySqlConnection conn) async {
-    await conn.query('''CREATE TABLE IF NOT EXISTS equipo (
-      id_equipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  static _crearTablaTipo(MySqlConnection conn) async {
+    await conn.query('''CREATE TABLE IF NOT EXISTS tipo (
+      id_tipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL
+    )''');
+  }
+
+  static _crearTablaAtaque(MySqlConnection conn) async {
+    await conn.query('''CREATE TABLE IF NOT EXISTS ataque (
+      id_ataque INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
       nombre VARCHAR(50) NOT NULL,
-      id_pokemon1 INT,
-      id_pokemon2 INT,
-      id_pokemon3 INT,
-      id_pokemon4 INT,
-      id_pokemon5 INT,
-      id_pokemon6 INT,
-      id_usuario INT,
-      FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
-  )''');
+      poder INT,
+      precision_ataque INT
+    )''');
   }
 
   static _crearTablaPokemon(MySqlConnection conn) async {
@@ -86,9 +86,9 @@ class Database {
       FOREIGN KEY (id_tipo1) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
       FOREIGN KEY (id_tipo2) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
       FOREIGN KEY (id_ataque1) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque2) REFERENCES tipo(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque3) REFERENCES tipo(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque4) REFERENCES tipo(id_ataque) ON DELETE CASCADE
+      FOREIGN KEY (id_ataque2) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque3) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque4) REFERENCES ataque(id_ataque) ON DELETE CASCADE
     )''');
   }
 
@@ -100,16 +100,4 @@ class Database {
       precio INT NOT NULL
     )''');
   }
-
-  static _crearTablaInventarioUsuario(MySqlConnection conn) async {
-    await conn.query('''CREATE TABLE IF NOT EXISTS inventario_usuario (
-      id_usuario INT,
-      id_objeto INT,
-      cantidad INT DEFAULT 0,
-      PRIMARY KEY (id_usuario, id_objeto),
-      FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
-      FOREIGN KEY (id_objeto) REFERENCES objetos(id_objeto)
-    )''');
-  }
-  
 }

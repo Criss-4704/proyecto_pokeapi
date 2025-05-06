@@ -63,7 +63,7 @@ class Menus {
   static juegoQuizz(String nombreUsuario) async{
     int correcta = 0;
     stdout.writeln('Bienvenido al modo Quizz, aqui disfrutaras de 5 preguntas sobre pokemon. Por cada pregunta acertada ganaras 500 pokeles, que son la moneda que usaras durante todo el videojuego modo historia. ¡Mucha suerte!');
-
+    stdout.writeln(' ');
     stdout.writeln('1. Cual de estos ataques es de tipo planta');
     stdout.writeln('------------------------------------------');
     stdout.writeln('A.Ataque rapido');
