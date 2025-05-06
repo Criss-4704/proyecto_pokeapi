@@ -18,6 +18,9 @@ class Database {
       await _crearBBDD(conn);
       await _crearTablaUsuarios(conn);
       await _crearTablaEquipo(conn);
+      await _crearTablaPokemon(conn);
+      await _crearTablaObjeto(conn);
+      await _crearTablaInventarioUsuario(conn);
     } catch(e){
       print(e);
     } finally {
@@ -43,26 +46,70 @@ class Database {
 
   static _crearTablaUsuarios(MySqlConnection conn) async {
     await conn.query('''CREATE TABLE IF NOT EXISTS usuarios (
-    id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL UNIQUE,
-    password VARCHAR(10) NOT NULL,
-    pokeles INT DEFAULT 0,
-    nivel INT
-    )''');
+      id_usuario INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL UNIQUE,
+      password VARCHAR(100) NOT NULL,
+      pokeles INT DEFAULT 0,
+      nivel INT DEFAULT 1
+      )''');
   }
 
   static _crearTablaEquipo(MySqlConnection conn) async {
-  await conn.query('''CREATE TABLE IF NOT EXISTS equipo (
-    id_equipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(50) NOT NULL,
-    id_pokemon1 INT,
-    id_pokemon2 INT,
-    id_pokemon3 INT,
-    id_pokemon4 INT,
-    id_pokemon5 INT,
-    id_pokemon6 INT,
-    id_usuario INT,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
+    await conn.query('''CREATE TABLE IF NOT EXISTS equipo (
+      id_equipo INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL,
+      id_pokemon1 INT,
+      id_pokemon2 INT,
+      id_pokemon3 INT,
+      id_pokemon4 INT,
+      id_pokemon5 INT,
+      id_pokemon6 INT,
+      id_usuario INT,
+      FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE CASCADE
   )''');
-}
+  }
+
+  static _crearTablaPokemon(MySqlConnection conn) async {
+    await conn.query('''CREATE TABLE IF NOT EXISTS pokemon (
+      id_pokemon INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL,
+      genero VARCHAR(50) NOT NULL,
+      nivel INT,
+      id_tipo1 INT,
+      id_tipo2 INT,
+      id_ataque1 INT,
+      id_ataque2 INT,
+      id_ataque3 INT,
+      id_ataque4 INT,
+      id_duenio INT,
+      FOREIGN KEY (id_duenio) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
+      FOREIGN KEY (id_tipo1) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
+      FOREIGN KEY (id_tipo2) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque1) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque2) REFERENCES tipo(id_ataque) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque3) REFERENCES tipo(id_ataque) ON DELETE CASCADE,
+      FOREIGN KEY (id_ataque4) REFERENCES tipo(id_ataque) ON DELETE CASCADE
+    )''');
+  }
+
+  static _crearTablaObjeto(MySqlConnection conn) async {
+    await conn.query('''CREATE TABLE IF NOT EXISTS objetos (
+      id_objeto INT AUTO_INCREMENT PRIMARY KEY,
+      nombre VARCHAR(50) NOT NULL,
+      descripcion TEXT,
+      precio INT NOT NULL
+    )''');
+  }
+
+  static _crearTablaInventarioUsuario(MySqlConnection conn) async {
+    await conn.query('''CREATE TABLE IF NOT EXISTS inventario_usuario (
+      id_usuario INT,
+      id_objeto INT,
+      cantidad INT DEFAULT 0,
+      PRIMARY KEY (id_usuario, id_objeto),
+      FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario),
+      FOREIGN KEY (id_objeto) REFERENCES objetos(id_objeto)
+    )''');
+  }
+  
 }
