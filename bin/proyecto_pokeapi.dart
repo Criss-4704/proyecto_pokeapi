@@ -7,14 +7,14 @@ main() async { //async= sirve para usar el await
   print('Vamos a crear la base de datos...');
   await Database.instalarBBDD();
 
-  String opcion = Menus.principal();
+  String opcion = Menus.principal(); //Menu inicio sesion o registro
 
   switch (opcion) {
     case '1':
 
       String? nombreUsuario = await Menus.inicioSesion();
 
-      if (nombreUsuario != null) {
+      if (nombreUsuario != null) { //si el usuario ha iniciado sesion con exito
         stdout.writeln("Dirigiendote a la sección del juego.");
 
         print('Bienvenido a la selección de minijuego, aqui elegiras que quieres jugar.');
@@ -29,10 +29,10 @@ main() async { //async= sirve para usar el await
 
         switch (minijuego) {
           case '1':
-            await Menus.juegoQuizz(nombreUsuario);
+            await Menus.juegoQuizz(nombreUsuario); //Accedemos al metodo de menus para jugar al quizz guardando el nombre de usuario para poder añadir su calificacion a la base de datos
             break;
           case '2':
-            print('Este minijuego está en desarrollo. Pronto estará disponible.');
+            await Menus.modoEstudio();
             break;
           case '3':
             exit(0);
