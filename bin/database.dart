@@ -6,18 +6,17 @@ class Database {
   static const String _user = 'root';
   static const String _nombreBBDD = 'pokeapi_app';
 
-  static instalarBBDD() async {
-    var settings = ConnectionSettings(
+  static instalarBBDD() async { 
+    var settings = ConnectionSettings( //ajustes para conectar a la base de datos con las variables que hemos creado
       host: _host, 
       port: _port,
       user: _user,
     );
     var conn = await MySqlConnection.connect(settings);
-    try {
+    try { //creamos la base de datos y las tablas con los metodos
       await _crearBBDD(conn);
       await _crearTablaUsuarios(conn);
       await _crearTablaTipo(conn);
-      await _crearTablaAtaque(conn);
       await _crearTablaPokemon(conn);
       await _crearTablaObjeto(conn);
     } catch (e) {
@@ -27,7 +26,7 @@ class Database {
     }
   }
 
-  static Future<MySqlConnection> obtenerConexion() async {
+  static Future<MySqlConnection> obtenerConexion() async { //Obtenemos conexion a la base de datos
     var settings = ConnectionSettings(
       host: _host,
       port: _port,
@@ -60,15 +59,6 @@ class Database {
     )''');
   }
 
-  static _crearTablaAtaque(MySqlConnection conn) async {
-    await conn.query('''CREATE TABLE IF NOT EXISTS ataque (
-      id_ataque INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-      nombre VARCHAR(50) NOT NULL,
-      poder INT,
-      precision_ataque INT
-    )''');
-  }
-
   static _crearTablaPokemon(MySqlConnection conn) async {
     await conn.query('''CREATE TABLE IF NOT EXISTS pokemon (
       id_pokemon INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -77,18 +67,10 @@ class Database {
       nivel INT,
       id_tipo1 INT,
       id_tipo2 INT,
-      id_ataque1 INT,
-      id_ataque2 INT,
-      id_ataque3 INT,
-      id_ataque4 INT,
       id_duenio INT,
       FOREIGN KEY (id_duenio) REFERENCES usuarios(id_usuario) ON DELETE CASCADE,
       FOREIGN KEY (id_tipo1) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
-      FOREIGN KEY (id_tipo2) REFERENCES tipo(id_tipo) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque1) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque2) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque3) REFERENCES ataque(id_ataque) ON DELETE CASCADE,
-      FOREIGN KEY (id_ataque4) REFERENCES ataque(id_ataque) ON DELETE CASCADE
+      FOREIGN KEY (id_tipo2) REFERENCES tipo(id_tipo) ON DELETE CASCADE
     )''');
   }
 

@@ -20,7 +20,7 @@ main() async { //async= sirve para usar el await
         print('Bienvenido a la selección de minijuego, aqui elegiras que quieres jugar.');
 
         print('------Menu Minijuegos------');
-        print('1. Quizz');
+        print('1. Quiz');
         print('2. Modo Estudio');
         print('3. Salir');
 
@@ -29,7 +29,7 @@ main() async { //async= sirve para usar el await
 
         switch (minijuego) {
           case '1':
-            await Menus.juegoQuizz(nombreUsuario); //Accedemos al metodo de menus para jugar al quizz guardando el nombre de usuario para poder añadir su calificacion a la base de datos
+            await Menus.juegoQuiz(nombreUsuario); //Accedemos al metodo de menus para jugar al quizz guardando el nombre de usuario para poder añadir su calificacion a la base de datos
             break;
           case '2':
             await Menus.modoEstudio();
@@ -39,17 +39,17 @@ main() async { //async= sirve para usar el await
           default:
             stdout.writeln("Debes elegir un numero del 1 al 3. Prueba de nuevo.");
         }
-      } else {
+      } else { //Si no ha puesto los datos de un usuario de la base de datos
         stdout.writeln("Login incorrecto");
       }
       break;
 
     case '2':
-      Menus.registro();
+      Menus.registro(); //Accedemos al metodo de registro
       break;
 
     case '3':
-      exit(0);
+      exit(0); //Salimos
 
     default:
       stdout.writeln("Debes elegir un numero del 1 al 3. Prueba de nuevo.");
